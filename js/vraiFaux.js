@@ -74,7 +74,7 @@ function nouvellePartie(){
 			textrep = ' ' + data[index].answers[index].value
 			var info = (typeof data[index].type == 'undefined' ? 'checkbox' : 'radio');
 
-			rep = rep + '<div class="card"><label><div class="card-body" id="' + index + '" > <h5 class="card-title">Réponse  ' + (index +1) +'</h5> <input style="opacity:100" type="'+ info + '" id="rep'+ index +'" >' + textrep + '</label></div> </div>' ;
+			rep = rep + '<div class="card"><label><div class="card-body" id="' + index + '" > <h5 class="card-title">Réponse  ' + (index +1) +'</h5> <input type="'+ info + '" id="rep'+ index +'" >' + textrep + '</label></div> </div>' ;
 			
 			
 		}
