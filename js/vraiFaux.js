@@ -110,7 +110,7 @@ function nouvellePartie(){
 		for (let index = 0; index < data[liste[0]].answers.length; index++) {
 			textrep = ' ' + data[liste[0]].answers[index].value
 			//var info = (typeof data[liste[0]].type == 'undefined' ? 'checkbox' : 'radio');
-			rep = rep + '<div class="card"><label><div class="card-body" id="' + index + '" ><input class="secondary-content" type="checkbox" id="rep'+ index +'" onclick="test('+index+')">' + textrep + '</label></div> </div>' ;
+			rep = rep + '<div class="card"><label><div class="card-body" id="' + index + '" ><input style="position: static" class="secondary-content" type="checkbox" id="rep'+ index +'" onclick="test('+index+')">' + textrep + '</label></div> </div>' ;
 			
 			
 		}
