@@ -301,7 +301,7 @@ function demarrage(){
 		reinitialiser(stats[c]);
 	}
 	// --- FONT-AWESOME
-  $("head").append($("<link rel='stylesheet' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' type='text/css' media='screen' />"));
+  	$("head").append($("<link rel='stylesheet' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css' type='text/css' media='screen' />"));
 	// --- MATHJAX
 	$('#accueil').append('<span id="secret" style="visibility:hidden">Test MathJax: $\\int_{\\mathbb R} e^{-x^2} dx = \\sqrt\\pi$.<br></span>'); // formule mathématique invisible
 	actualiserMathJax(); //chargement et rendu du test invisible
