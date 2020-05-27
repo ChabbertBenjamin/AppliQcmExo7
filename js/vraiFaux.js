@@ -117,7 +117,7 @@ function nouvellePartie(){
 		}
 
 		
-		$( ".card-deck" ).append(rep);
+		$( ".card-flex" ).append(rep);
 	
 	actualiserAffichage();
 	actualiserMathJax();
