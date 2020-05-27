@@ -231,7 +231,7 @@ function actualiserMathJax(){
 	if(typeof(MathJax)!= 'undefined') {// si MathJax est chargé, on relance le rendu
 		MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
 	} else { // sinon, on le recharge et on relance le rendu en callback
-		$.getScript('http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function() {
+		$.getScript('https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML', function() {
     	MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
 		});
 	}
