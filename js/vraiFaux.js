@@ -26,6 +26,7 @@ var resultatsLoc = []; // longueur idem, valeurs 1, 0 ou -1 suivant le résultat
 
 
 function choisirTheme(nom){ // lorsqu'on clique sur un thème dans le menu
+
 	nbQuestions=1; // si ça a changé à la fin du thème précédent
 	if(themes[nom]==undefined){// le thème n'est pas encore chargé
 		etat="chargement";
@@ -48,6 +49,7 @@ function choisirTheme(nom){ // lorsqu'on clique sur un thème dans le menu
 
 
 function demarrerTheme(nom){
+	
 	t = JSON.parse(JSON.stringify(themes[nom])); //duplication du thème
 	data=t.data; //data contient les données
 	console.log("Le thème "+nom+" contient "+data.length+" questions");
@@ -58,19 +60,21 @@ function demarrerTheme(nom){
 		actualiserAffichage();
 		actualiserMathJax(); // au cas où il y a des maths dans un exemple ou dans les consignes
 	}else{
+		$( ".card" ).remove("");
 		nouvellePartie();
 	}
 }
 
 function nouvellePartie(){
-	console.log("DATA")
-	console.log(data[0].answers.length)
+		
 		var rep ='';
 		var textrep = '';
-		console.log(textrep)
+		console.log(data[0].type)
 		for (let index = 0; index < data[0].answers.length; index++) {
-			textrep = ' ' + data[0].answers[index].value
-			rep = rep + '<label><div class="card" style="width: 18rem;"> <div class="card-body"> <h5 class="card-title">Réponse ' + (index +1) +'</h5> <input type="checkbox"> ' + textrep + '</div> </div></label> ' ;
+			textrep = ' ' + data[index].answers[index].value
+			var info = (typeof data[index].type == 'undefined' ? 'checkbox' : 'radio');
+
+			rep = rep + '<label><div class="card" style="width: 18rem;"> <div class="card-body"> <h5 class="card-title">Réponse ' + (index +1) +'</h5> <input type="'+ info + '"> ' + textrep + '</div> </div></label> ' ;
 			
 			
 		}
@@ -186,6 +190,7 @@ function fin(){ // Calcul des bonus de fin et affichage des stats de fin :
 // - - - -   A C T U A L I S A T I O N   A F F I C H A G E - - - - 
 
 function actualiserAffichage(){
+	
 	actualiserStats(); //d'abord, et ensuite, l'affichage:
 	$(".sync").each(function(){
 		if(typeof($(this)[$(this).data('action')])=='function'){
