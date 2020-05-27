@@ -62,8 +62,6 @@ function demarrerTheme(nom){
 	}
 }
 
-
-
 function nouvellePartie(){
 	console.log("DATA")
 	console.log(data[0].answers.length)
@@ -72,7 +70,7 @@ function nouvellePartie(){
 		console.log(textrep)
 		for (let index = 0; index < data[0].answers.length; index++) {
 			textrep = data[0].answers[index].value
-			rep = rep + '<label><input type="checkbox">' + textrep + '</label>' ;
+			rep = rep + '<label><div class="card" style="width: 18rem;"> <div class="card-body"> <h5 class="card-title">Réponse ' + (index +1) +'</h5> <input type="checkbox">' + textrep + '</div> </div></label> ' ;
 			
 			
 		}
