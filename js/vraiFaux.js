@@ -109,9 +109,8 @@ function nouvellePartie(){
 		var textrep = '';
 		for (let index = 0; index < data[liste[0]].answers.length; index++) {
 			textrep = ' ' + data[liste[0]].answers[index].value
-			var info = (typeof data[liste[0]].type == 'undefined' ? 'checkbox' : 'radio');
-
-			rep = rep + '<div class="card"><label><div class="card-body" id="' + index + '" > <h5 class="card-title">Réponse  ' + (index +1) +'</h5>' + textrep + '<input style="opacity:100" type="'+ info + '" id="rep'+ index +'" onclick="test('+index+')"></label></div> </div>' ;
+			//var info = (typeof data[liste[0]].type == 'undefined' ? 'checkbox' : 'radio');
+			rep = rep + '<div class="card"><label><div class="card-body" id="' + index + '" ><input style="opacity:100" type="checkbox" id="rep'+ index +'" onclick="test('+index+')">' + textrep + '</label></div> </div>' ;
 			
 			
 		}
