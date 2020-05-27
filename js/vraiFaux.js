@@ -60,13 +60,13 @@ function demarrerTheme(nom){
 		actualiserAffichage();
 		actualiserMathJax(); // au cas où il y a des maths dans un exemple ou dans les consignes
 	}else{
-		$( ".card" ).remove("");
 		nouvellePartie();
 	}
 }
 
+
 function nouvellePartie(){
-		
+		$( ".card" ).remove("");
 		var rep ='';
 		var textrep = '';
 		console.log(data[0].type)
@@ -74,11 +74,13 @@ function nouvellePartie(){
 			textrep = ' ' + data[index].answers[index].value
 			var info = (typeof data[index].type == 'undefined' ? 'checkbox' : 'radio');
 
-			rep = rep + '<label><div class="card" style="width: 18rem;"> <div class="card-body"> <h5 class="card-title">Réponse ' + (index +1) +'</h5> <input type="'+ info + '"> ' + textrep + '</div> </div></label> ' ;
+			rep = rep + '<div class="card"><label><div class="card-body" id="' + index + '" > <h5 class="card-title">Réponse  ' + (index +1) +'</h5> <input style="opacity:100" type="'+ info + '" id="rep'+ index +'" >' + textrep + '</label></div> </div>' ;
 			
 			
 		}
-		$( "#test" ).append(rep);
+
+		
+		$( ".card-deck" ).append(rep);
 		
 	c="loc";
 	reinitialiser(stats['loc']);
@@ -102,14 +104,34 @@ function nouvellePartie(){
 		quest.find("*[id]").andSelf().each(function() { $(this).attr("id", $(this).attr("id") + i); });
 	}
 	etat="jeu";
+	
 	actualiserAffichage();
 	actualiserMathJax();
 }
 
 function resultats(){
+
+	var tabRep = [];
+	for (let index = 0; index < data[0].answers.length; index++) {
+		var id = 'rep' + index;
+		console.log($('#rep'+index).attr('checked'));
+	
+		if( $('#rep'+index).is(':checked') ){
+			console.log("oui")
+			tabRep.push('#rep'+index)
+		}
+		
+
+		
+	}
+	console.log("ici")
+	console.log(tabRep)
+
+
+
 	etat="resultats";
 	resultatsLoc=[];
-	console.log(data.answer)
+	console.log(data.length)
 	for(var i=0;i<liste.length;i++){
 		resultatsLoc[i]=0;
 		if((data[liste[i]].answer && $('#qV'+i).is(':checked'))||(!data[liste[i]].answer && $('#qF'+i).is(':checked'))){
@@ -190,7 +212,7 @@ function fin(){ // Calcul des bonus de fin et affichage des stats de fin :
 // - - - -   A C T U A L I S A T I O N   A F F I C H A G E - - - - 
 
 function actualiserAffichage(){
-	
+
 	actualiserStats(); //d'abord, et ensuite, l'affichage:
 	$(".sync").each(function(){
 		if(typeof($(this)[$(this).data('action')])=='function'){
