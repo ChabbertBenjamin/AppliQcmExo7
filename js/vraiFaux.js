@@ -63,24 +63,23 @@ function demarrerTheme(nom){
 		nouvellePartie();
 	}
 }
+function test(index){
+	
+	if( $('#rep'+index).is(':checked') ){
+		$('#rep'+index).prop('checked', false);
+		console.log($('#rep'+index).is(':checked'))
+	}else{
+		$('#rep'+index).prop('checked', true);
+		console.log($('#rep'+index).is(':checked'))
+	}
+	
 
+}
 
 function nouvellePartie(){
-		$( ".card" ).remove("");
-		var rep ='';
-		var textrep = '';
-		console.log(data[0].type)
-		for (let index = 0; index < data[0].answers.length; index++) {
-			textrep = ' ' + data[index].answers[index].value
-			var info = (typeof data[index].type == 'undefined' ? 'checkbox' : 'radio');
-
-			rep = rep + '<div class="card"><label><div class="card-body" id="' + index + '" > <h5 class="card-title">Réponse  ' + (index +1) +'</h5> <input type="'+ info + '" id="rep'+ index +'" >' + textrep + '</label></div> </div>' ;
-			
-			
-		}
-
 		
-		$( ".card-deck" ).append(rep);
+		$( ".card" ).remove("");
+		
 		
 	c="loc";
 	reinitialiser(stats['loc']);
@@ -102,61 +101,69 @@ function nouvellePartie(){
 		}
 		quest.find('input').attr('name','q'+i);
 		quest.find("*[id]").andSelf().each(function() { $(this).attr("id", $(this).attr("id") + i); });
+		
 	}
 	etat="jeu";
+	console.log(data[liste[0]])
+	var rep ='';
+		var textrep = '';
+		for (let index = 0; index < data[liste[0]].answers.length; index++) {
+			textrep = ' ' + data[liste[0]].answers[index].value
+			var info = (typeof data[liste[0]].type == 'undefined' ? 'checkbox' : 'radio');
+
+			rep = rep + '<div class="card"><label><div class="card-body" id="' + index + '" > <h5 class="card-title">Réponse  ' + (index +1) +'</h5>' + textrep + '<input style="opacity:100" type="'+ info + '" id="rep'+ index +'" onclick="test('+index+')"></label></div> </div>' ;
+			
+			
+		}
+
+		
+		$( ".card-deck" ).append(rep);
 	
 	actualiserAffichage();
 	actualiserMathJax();
 }
 
 function resultats(){
-
 	var tabRep = [];
-	for (let index = 0; index < data[0].answers.length; index++) {
-		var id = 'rep' + index;
-		console.log($('#rep'+index).attr('checked'));
-	
+	for (let index = 0; index < data[liste[0]].answers.length; index++) {
 		if( $('#rep'+index).is(':checked') ){
-			console.log("oui")
 			tabRep.push('#rep'+index)
 		}
-		
-
-		
 	}
-	console.log("ici")
+
 	console.log(tabRep)
+
+
+	var nbRepVrai = 0;
+	var nbRepFausses = 0;
+	for (let index = 0; index < data[liste[0]].answers.length; index++) {
+		if(data[liste[0]].answers[index].correct){
+			for(var i=0; i<tabRep.length; i++) {
+				if('#rep'+index === tabRep[i]) {
+					console.log('Il a bon');
+					nbRepVrai++;
+				}
+			}
+		}else{
+			for(var i=0; i<tabRep.length; i++) {
+				if('#rep'+index === tabRep[i]) {
+					console.log('Il a faux');
+					nbRepFausses++;
+				}
+			}
+		}
+	}
+
+	// CODER L'Affichage du résultat
 
 
 
 	etat="resultats";
 	resultatsLoc=[];
-	console.log(data.length)
-	for(var i=0;i<liste.length;i++){
-		resultatsLoc[i]=0;
-		if((data[liste[i]].answer && $('#qV'+i).is(':checked'))||(!data[liste[i]].answer && $('#qF'+i).is(':checked'))){
-			resultatsLoc[i]++;
-			for(item in stats) stats[item].repJustes++;
-		} else if((data[liste[i]].answer && $('#qF'+i).is(':checked'))||(!data[liste[i]].answer && $('#qV'+i).is(':checked'))){
-			resultatsLoc[i]--;
-			for(item in stats) stats[item].repFausses++;
-		} else{
-			for(item in stats) stats[item].repNeutres++;
-		}// "if" un peu longs à cause d'un bug de Chrome sur les attributs "checked"
-	}
-	if(stats.loc.repFausses==0){ // gestion de la barre de combo
-		combo+=stats.loc.repJustes;
-	} else {
-		combo=0;
-	}
+
 	actualiserStats();
-	// ajout des bonus:
-	if(Math.floor(combo/10)>0){
-		bonus.liste.push({nom: ">"+10*Math.floor(combo/10)+" réponses sans faute", valeur:Math.floor(combo/10)});
-	}
-	if(Math.floor(stats.loc.efficacite)>20){// et un bonus de rapidité : 1pt ttes les 3 sec
-		bonus.liste.push({nom:"Bonus efficacité",valeur:1});
-	}
+
+
 	actualiserBonus();
 	actualiserAffichage();
 }
