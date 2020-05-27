@@ -68,8 +68,12 @@ function nouvellePartie(){
 	console.log("DATA")
 	console.log(data[0].answers.length)
 		var rep ='';
+		var textrep = '';
+		console.log(textrep)
 		for (let index = 0; index < data[0].answers.length; index++) {
-			rep = rep + '<input type="checkbox">Vrai';
+			textrep = data[0].answers[index].value
+			rep = rep + '<input type="checkbox">' + textrep;
+			
 			
 		}
 		$( "#test" ).append(rep);
