@@ -9,6 +9,8 @@
     <title>Quiz de Mathématiques (vrai ou faux), niveau fin de TS et L1 / math sup </title>
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<!-- Compiled and minified CSS -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 		<!--<link rel="stylesheet" href="../css/bootstrap.min.css">-->
   </head>
   <body onload="demarrage()" style="padding-top:0px; font-size:15px">
@@ -23,7 +25,7 @@
 		
 		<div class="navbar-header">
 			<div class="btn-group"> <!-- bouton thèmes -->
-				<button type="button" class="btn btn-default navbar-btn dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Thèmes <span class="caret"></span>
+				<button type="button" class="btn btn-default navbar-btn " data-toggle="dropdown" aria-expanded="false">Thèmes <span class="caret"></span>
 				</button>
 				<ul class="dropdown-menu dropdown-menu-right" role="menu">
 					<!--<li><a href="#" onclick="choisirTheme('echauffement')">Echauffement (TS)</a></li>
@@ -46,6 +48,7 @@
 			</div> <!-- /  bouton thèmes -->
 		</div> <!-- / navbar-header -->
 	</nav> <!-- - - - - - / B A R R E   D E   N A V I G A T I O N - - - - - -->
+
   
   <!-- - - - - - Q U E S T I O N S - - - - - -->
 
@@ -56,10 +59,11 @@
 			<tr id="tr-modele" style="display:none"><td>
 				
 				<p class="question"> <!-- Enoncé --> </p>
-				<div id="test">
+				<div class="card-deck">
 
 
 				</div>
+
 				
 				
 
@@ -241,6 +245,8 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	<!--<script src="../js/jquery-2.1.3.min.js"></script>
 	<script src="../js/bootstrap.min.js"></script>-->
+	<!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 	<script type="text/javascript" async
   src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-MML-AM_CHTML">
 </script>
