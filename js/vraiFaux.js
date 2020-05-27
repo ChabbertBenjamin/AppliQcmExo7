@@ -72,7 +72,7 @@ function nouvellePartie(){
 		console.log(textrep)
 		for (let index = 0; index < data[0].answers.length; index++) {
 			textrep = data[0].answers[index].value
-			rep = rep + '<input type="checkbox">' + textrep;
+			rep = rep + '<label><input type="checkbox">' + textrep + '</label>' ;
 			
 			
 		}
