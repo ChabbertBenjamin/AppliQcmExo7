@@ -69,8 +69,8 @@ function nouvellePartie(){
 		var textrep = '';
 		console.log(textrep)
 		for (let index = 0; index < data[0].answers.length; index++) {
-			textrep = data[0].answers[index].value
-			rep = rep + '<label><div class="card" style="width: 18rem;"> <div class="card-body"> <h5 class="card-title">Réponse ' + (index +1) +'</h5> <input type="checkbox">' + textrep + '</div> </div></label> ' ;
+			textrep = ' ' + data[0].answers[index].value
+			rep = rep + '<label><div class="card" style="width: 18rem;"> <div class="card-body"> <h5 class="card-title">Réponse ' + (index +1) +'</h5> <input type="checkbox"> ' + textrep + '</div> </div></label> ' ;
 			
 			
 		}
