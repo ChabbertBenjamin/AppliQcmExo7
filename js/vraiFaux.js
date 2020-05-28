@@ -3,6 +3,10 @@
 
 var etat = 'accueil';
 var datacop ;
+var nbRepVrai = 0;
+var nbRepFausses = 0;
+var nbRepVMax = 0;
+var moyenne = 0;
 // Variable d'état de l'application.
 // Peut prendre les valeurs : 'accueil', 'chargement', 'info', 'jeu', 'resultats', 'correction', 'fin'.
 // Elle détermine ce qui doit être affiché ou pas (voir le template)
@@ -53,6 +57,15 @@ function demarrerTheme(nom){
 	t = JSON.parse(JSON.stringify(themes[nom])); //duplication du thème
 	data=t.data; //data contient les données
 	datacop = data;
+	for (let index = 0; index < data.length; index++) {
+		data[0].answers
+		for (let k = 0; k < data[index].answers.length; k++) {
+			if (data[index].answers[k].correct) {
+				nbRepVMax++
+			}
+		}
+	}
+	console.log(nbRepVMax);
 	console.log("Le thème "+nom+" contient "+data.length+" questions");
 	liste=[]; // nettoyer la liste d'un éventuel thème précédent
 	reinitialiser(stats['theme']);
@@ -98,34 +111,29 @@ function nouvellePartie(){
 	if(nbQuestions>data.length){ // s'il reste trop peu de questions
 		nbQuestions=data.length;
 	}
-	console.log(data);
 	liste=sousListe(nbQuestions,data.length); // choisir les questions de cette partie dans le thème
-	console.log(liste);
 	console.log('il reste '+data.length+'questions. Choix : '+liste);
 	
 	$('#vf tr').each(function(){ if($(this).attr('id')!='tr-modele') $(this).remove();}); // vide tout sauf le modèle
 	
-	for(var i=0;i<nbQuestions;i++){// attribution des id et noms aux clones
-		var quest=$('#tr-modele').clone().insertAfter('#tr-modele').toggle(true);
-		quest.find('.question').html(data[liste[i]].question); // lier du latex ne passe pas bien avec l'eval
-		if(data[liste[i]].comment != undefined){
-			quest.find('.commentaire').html(data[liste[i]].comment);
-		} else{
-			quest.find('.affichageCommentaire').remove();
-		}
-		quest.find('input').attr('name','q'+i);
-		quest.find("*[id]").andSelf().each(function() { $(this).attr("id", $(this).attr("id") + i); });
-		
+	var quest=$('#tr-modele').clone().insertAfter('#tr-modele').toggle(true);
+	quest.find('.question').html(data[liste[0]].question); // lier du latex ne passe pas bien avec l'eval
+	if(data[liste[0]].comment != undefined){
+		quest.find('.commentaire').html(data[liste[0]].comment);
+	} else{
+		quest.find('.affichageCommentaire').remove();
 	}
+	quest.find('input').attr('name','q'+0);
+	quest.find("*[id]").andSelf().each(function() { $(this).attr("id", $(this).attr("id") + 0); });
+		
+
 	etat="jeu";
-	console.log(data[liste[0]])
 	var rep ='';
 		var textrep = '';
 		for (let index = 0; index < data[liste[0]].answers.length; index++) {
 			textrep = ' ' + data[liste[0]].answers[index].value
 			//var info = (typeof data[liste[0]].type == 'undefined' ? 'checkbox' : 'radio');
 			rep = rep + '<div class="card card-'+index+'" ><label><div class="card-body" id="' + index + '" >' + textrep + '<input class="secondary-content" style="opacity:0" type="checkbox" id="rep'+ index +'" onclick="test('+index+')"></label></div> </div>' ;
-			
 			
 		}
 
@@ -134,9 +142,6 @@ function nouvellePartie(){
 	
 	actualiserAffichage();
 	actualiserMathJax();
-	data.splice(liste[0], 1);
-	console.log(data);
-	console.log(liste);
 }
 
 function resultats(){
@@ -147,11 +152,7 @@ function resultats(){
 		}
 	}
 
-	console.log(tabRep)
-
-
-	var nbRepVrai = 0;
-	var nbRepFausses = 0;
+	
 	for (let index = 0; index < data[liste[0]].answers.length; index++) {
 		if(data[liste[0]].answers[index].correct){
 			for(var i=0; i<tabRep.length; i++) {
@@ -169,11 +170,15 @@ function resultats(){
 			}
 		}
 	}
-
+	moyenne = ((nbRepVrai - nbRepFausses) / nbRepVMax) * 20; 
+	moyenne = Math.round(moyenne);
+	if (moyenne < 0) {
+		moyenne = 0;
+	}
 	// CODER L'Affichage du résultat
 
 
-
+	data.splice(liste[0], 1);
 	etat="resultats";
 	resultatsLoc=[];
 
@@ -181,7 +186,11 @@ function resultats(){
 
 
 	actualiserBonus();
-	actualiserAffichage();
+	if (data.length == 0){
+		actualiserAffichage();
+	}else{
+		nouvellePartie();
+	}
 }
 
 function modifier(){
@@ -191,51 +200,17 @@ function modifier(){
 }
 
 function correction(){
-	// barrer, souligner, colorier.
-	for(var i=0;i<liste.length;i++){
-		$('#q'+(data[liste[i]].answer?'V':'F')+i).next().css({'text-decoration':'underline'});
-		if(resultatsLoc[i]==0){ // pas répondu
-			$('#q'+'N'+i).parent().attr('class', 'btn btn-warning');
-		} else if(resultatsLoc[i]==1){ // correct
-			$('#q'+(data[liste[i]].answer?'V':'F')+i).parent().attr('class', 'btn btn-success');
-		} else { // incorrect
-			$('#q'+(data[liste[i]].answer?'F':'V')+i).parent().attr('class', 'btn btn-danger');
-			$('#q'+(data[liste[i]].answer?'F':'V')+i).next().css({'text-decoration':'line-through'});
-		}
-	}
-	etat="correction";
-	//enlever les questions répondues correctement
-	liste.sort(function(a,b){ return b - a; }); // trier dans l'ordre décroissant pour le splice
-	for(var i=0;i<liste.length;i++){
-		if(resultatsLoc[i]==1)
-			data.splice(liste[i],1); 
-		//if(resultatsLoc[i]==-1)
-		//	data.push(data.splice(liste[i],0)); //dupliquer une question répondue incorrectement
-		// un peu méchant
-	}
 	actualiserAffichage();
 	actualiserMathJax();
 }
 
 function fin(){ // Calcul des bonus de fin et affichage des stats de fin :
-	etat="fin";
-	c="theme"
-	if(Math.ceil(stats.theme.note)>0){
-		bonus.liste.push({nom: "Bonus pour la note", valeur:Math.ceil(stats.theme.note)});// bonus égal à la note
-	}
-	if(Math.ceil(stats.theme.note)==20){
-		bonus.liste.push({nom: "Bonus spécial 20/20", valeur:10});
-	}
-	if(Math.floor(stats.theme.efficacite/2)>0){// et un bonus de rapidité
-		bonus.liste.push({nom:"Bonus efficacité",valeur:Math.floor(stats.theme.efficacite/2)});
-	}
 	actualiserBonus();
 	actualiserAffichage();
 }
 // - - - -   A C T U A L I S A T I O N   A F F I C H A G E - - - - 
 
 function actualiserAffichage(){
-
 	actualiserStats(); //d'abord, et ensuite, l'affichage:
 	$(".sync").each(function(){
 		if(typeof($(this)[$(this).data('action')])=='function'){
@@ -260,28 +235,13 @@ function basculerStatsGlobales(){// afficher/masquer la boite de dialogue de sta
 // - - - -   A C T U A L I S A T I O N   D E   D O N N E E S  - - - - 
 
 function actualiserStats(){
-	var fin=new Date();
-	for(var c in stats){// actualise tous les contextes : stats locales, du thème, et globales
-		if(stats[c].rep!=stats[c].repJustes+stats[c].repFausses+stats[c].repNeutres)
-			stats[c].rep=stats[c].repJustes+stats[c].repFausses+stats[c].repNeutres;
-		stats[c].points=stats[c].repJustes-stats[c].repFausses; // pts gagnés
-		stats[c].note=(20*stats[c].points/stats[c].rep); // calcul de la note locale avec signe
-		stats[c].note=(stats[c].note<0?0:stats[c].note); // on ramène à zéro le cas échéant
-		stats[c].note=Math.floor(2*stats[c].note+0.5)/2; // arrondi au demi-point le + proche
-		stats[c].temps=Math.floor((fin-stats[c].debut)/1000); // temps écoulé
-		stats[c].efficacite= 60*stats[c].points/stats[c].temps; // points gagnés par minute
-		stats[c].efficacite=Math.floor(10*stats[c].efficacite)/10; //arrondi
-		
-	}
+
 }
-function actualiserBonus(){// actualise bonus.total et bonus.html d'après la pile des derniers bonus
-	bonus.html="";
-	for(var i=0;i<bonus.liste.length;i++){
-		bonus.total+=bonus.liste[i].valeur;
-		bonus.html+="<tr><td>"+bonus.liste[i].nom+"</td><td>+ "+bonus.liste[i].valeur+"</td></tr>";
-	}
-	bonus.liste=[];// vide la pile de bonus
+
+function actualiserBonus(){
+
 }
+
 function reinitialiser(pp){
 		pp.debut=new Date(),
 		pp.repJustes=0;
