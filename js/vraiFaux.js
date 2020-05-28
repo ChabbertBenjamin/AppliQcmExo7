@@ -2,6 +2,7 @@
 // - - - - - - V A R I A B L E S - - - - - - - - 
 
 var etat = 'accueil';
+var datacop ;
 // Variable d'état de l'application.
 // Peut prendre les valeurs : 'accueil', 'chargement', 'info', 'jeu', 'resultats', 'correction', 'fin'.
 // Elle détermine ce qui doit être affiché ou pas (voir le template)
@@ -49,9 +50,9 @@ function choisirTheme(nom){ // lorsqu'on clique sur un thème dans le menu
 
 
 function demarrerTheme(nom){
-	
 	t = JSON.parse(JSON.stringify(themes[nom])); //duplication du thème
 	data=t.data; //data contient les données
+	datacop = data;
 	console.log("Le thème "+nom+" contient "+data.length+" questions");
 	liste=[]; // nettoyer la liste d'un éventuel thème précédent
 	reinitialiser(stats['theme']);
@@ -97,7 +98,9 @@ function nouvellePartie(){
 	if(nbQuestions>data.length){ // s'il reste trop peu de questions
 		nbQuestions=data.length;
 	}
+	console.log(data);
 	liste=sousListe(nbQuestions,data.length); // choisir les questions de cette partie dans le thème
+	console.log(liste);
 	console.log('il reste '+data.length+'questions. Choix : '+liste);
 	
 	$('#vf tr').each(function(){ if($(this).attr('id')!='tr-modele') $(this).remove();}); // vide tout sauf le modèle
@@ -131,6 +134,9 @@ function nouvellePartie(){
 	
 	actualiserAffichage();
 	actualiserMathJax();
+	data.splice(liste[0], 1);
+	console.log(data);
+	console.log(liste);
 }
 
 function resultats(){
