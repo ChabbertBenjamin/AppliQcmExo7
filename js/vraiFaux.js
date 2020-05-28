@@ -67,11 +67,22 @@ function test(index){
 	
 	if( $('#rep'+index).is(':checked') ){
 		$('#rep'+index).prop('checked', false);
-		console.log($('#rep'+index).is(':checked'))
+		
 	}else{
 		$('#rep'+index).prop('checked', true);
-		console.log($('#rep'+index).is(':checked'))
 	}
+
+
+	console.log($('#rep'+index).is(':checked'))
+	if( $('#rep'+index).is(':checked') ){
+		console.log("oui")
+		$('.card-'+index).css("background-color", "yellow");
+
+	}else{
+		$('.card-'+index).css("background-color", "white");
+	}
+
+
 	
 
 }
@@ -110,7 +121,7 @@ function nouvellePartie(){
 		for (let index = 0; index < data[liste[0]].answers.length; index++) {
 			textrep = ' ' + data[liste[0]].answers[index].value
 			//var info = (typeof data[liste[0]].type == 'undefined' ? 'checkbox' : 'radio');
-			rep = rep + '<div class="card"><label><div class="card-body" id="' + index + '" ><input class="secondary-content" type="checkbox" id="rep'+ index +'" onclick="test('+index+')">' + textrep + '</label></div> </div>' ;
+			rep = rep + '<div class="card card-'+index+'" ><label><div class="card-body" id="' + index + '" >' + textrep + '<input class="secondary-content" style="opacity:0" type="checkbox" id="rep'+ index +'" onclick="test('+index+')"></label></div> </div>' ;
 			
 			
 		}
