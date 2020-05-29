@@ -5,8 +5,10 @@ var etat = 'accueil';
 var datacop ;
 var nbRepVrai = 0;
 var nbRepFausses = 0;
-var nbRepVMax = 0;
+var nbRepMax = 0;
 var moyenne = 0;
+var tabRep = [];
+var themechoix = "";
 // Variable d'état de l'application.
 // Peut prendre les valeurs : 'accueil', 'chargement', 'info', 'jeu', 'resultats', 'correction', 'fin'.
 // Elle détermine ce qui doit être affiché ou pas (voir le template)
@@ -49,23 +51,20 @@ function choisirTheme(nom){ // lorsqu'on clique sur un thème dans le menu
 		demarrerTheme(nom);
 	}
 	
-	
 }
 
 
 function demarrerTheme(nom){
+	themechoix = nom;
 	t = JSON.parse(JSON.stringify(themes[nom])); //duplication du thème
 	data=t.data; //data contient les données
 	datacop = data;
+	nbRepMax = 0;
 	for (let index = 0; index < data.length; index++) {
-		data[0].answers
 		for (let k = 0; k < data[index].answers.length; k++) {
-			if (data[index].answers[k].correct) {
-				nbRepVMax++
-			}
+			nbRepMax++
 		}
 	}
-	console.log(nbRepVMax);
 	console.log("Le thème "+nom+" contient "+data.length+" questions");
 	liste=[]; // nettoyer la liste d'un éventuel thème précédent
 	reinitialiser(stats['theme']);
@@ -77,6 +76,10 @@ function demarrerTheme(nom){
 		nouvellePartie();
 	}
 }
+function redemarrerTheme(){
+	demarrerTheme(themechoix);
+}
+
 function test(index){
 	
 	if( $('#rep'+index).is(':checked') ){
@@ -90,11 +93,12 @@ function test(index){
 	console.log($('#rep'+index).is(':checked'))
 	if( $('#rep'+index).is(':checked') ){
 		console.log("oui")
-		$('.card-'+index).css("background-color", "yellow");
-	
+		$('.card-'+index).addClass("teal lighten-5");
+		$('.card-'+index).addClass("z-depth-4");
 
 	}else{
-		$('.card-'+index).css("background-color", "white");
+		$('.card-'+index).removeClass("teal lighten-5");
+		$('.card-'+index).removeClass("z-depth-4");
 
 	}
 
@@ -105,11 +109,9 @@ function test(index){
 
 function nouvellePartie(){
 		
-		$( ".card" ).remove("");
-		
+	$( ".card" ).remove("");	
 		
 	c="loc";
-	reinitialiser(stats['loc']);
 	if(nbQuestions>data.length){ // s'il reste trop peu de questions
 		nbQuestions=data.length;
 	}
@@ -135,7 +137,7 @@ function nouvellePartie(){
 		for (let index = 0; index < data[liste[0]].answers.length; index++) {
 			textrep = ' ' + data[liste[0]].answers[index].value
 			//var info = (typeof data[liste[0]].type == 'undefined' ? 'checkbox' : 'radio');
-			rep = rep + '<div class="card card-'+index+'" style="min-width: 100%;"><label><input class="secondary-content" style="opacity:100" type="checkbox" id="rep'+ index +'" onclick="test('+index+')"><div class="card-body" id="' + index + '" >' + textrep + '</div></label></div>' ;
+			rep = rep + '<div class="card card-'+index+'" style="min-width: 100%;"><label><input class="secondary-content" style="opacity:100" type="checkbox" id="rep'+ index +'" onclick="test('+index+')"><div class="card-body" id="' + index + '" ><text style="color:black;">' + textrep + '</text></div></label></div>' ;
 			
 		}
 
@@ -146,37 +148,36 @@ function nouvellePartie(){
 	actualiserMathJax();
 }
 
+function calculresultat(){
+	moyenne = ((nbRepVrai - nbRepFausses) / nbRepMax) * 20; 
+	moyenne = Math.round(moyenne);
+	if (moyenne < 0) {
+		moyenne = 0;
+	}
+}
+
 function resultats(){
-	var tabRep = [];
 	for (let index = 0; index < data[liste[0]].answers.length; index++) {
 		if( $('#rep'+index).is(':checked') ){
 			tabRep.push('#rep'+index)
 		}
 	}
-
-	
 	for (let index = 0; index < data[liste[0]].answers.length; index++) {
-		if(data[liste[0]].answers[index].correct){
-			for(var i=0; i<tabRep.length; i++) {
-				if('#rep'+index === tabRep[i]) {
-					console.log('Il a bon');
-					nbRepVrai++;
-				}
+		if (data[liste[0]].answers[index].correct){
+			if ($('#rep'+index).is(':checked')){
+				nbRepVrai++;
+			}else{
+				nbRepFausses++;
 			}
 		}else{
-			for(var i=0; i<tabRep.length; i++) {
-				if('#rep'+index === tabRep[i]) {
-					console.log('Il a faux');
-					nbRepFausses++;
-				}
+			if ($('#rep'+index).is(':checked')) {
+				nbRepFausses++;
+			}else{
+				nbRepVrai++;
 			}
 		}
 	}
-	moyenne = ((nbRepVrai - nbRepFausses) / nbRepVMax) * 20; 
-	moyenne = Math.round(moyenne);
-	if (moyenne < 0) {
-		moyenne = 0;
-	}
+	calculresultat();
 	// CODER L'Affichage du résultat
 
 
@@ -185,7 +186,6 @@ function resultats(){
 	resultatsLoc=[];
 
 	actualiserStats();
-
 
 	actualiserBonus();
 	if (data.length == 0){
@@ -245,7 +245,7 @@ function actualiserBonus(){
 }
 
 function reinitialiser(pp){
-		pp.debut=new Date(),
+		pp.debut=new Date();
 		pp.repJustes=0;
 		pp.repFausses=0;
 		pp.repNeutres=0;
@@ -254,6 +254,11 @@ function reinitialiser(pp){
 		pp.points=0;
 		pp.temps=0;
 		pp.efficacite=0;
+		nbRepVrai = 0;
+		nbRepFausses = 0;
+		moyenne = 0;
+		tabRep = [];
+
 }
 // - - - - - - - - - - - - - - - - - - - - - - - - -
 
