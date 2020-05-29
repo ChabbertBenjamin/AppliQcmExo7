@@ -58,7 +58,7 @@
 		<!-- cette ligne du tableau sera dupliquée et remplie dynamiquement-->
 			<tr id="tr-modele" style="display:none"><td>
 				
-				<p class="question"> <!-- Enoncé --> </p>
+				<p class="question" style="font-size: large;"> <!-- Enoncé --> </p>
 
 				<div class="card-flex"> </div>
 		
@@ -86,7 +86,7 @@
 		<div class="container">
   	<div class="col-xs-11 col-sm-8">
 		<div class="sync" data-action="toggle" data-param="(etat=='jeu')"  style="display:none">
-		<p><button  class="btn btn-primary btn-block btn-lg"  onclick="resultats()">
+		<p><button  class="btn-block btn-lg btn-large waves-effect waves-light"  onclick="resultats()">
 		<i class="fa fa-arrow-right"></i> Envoyer </button></p>
 		</div><!-- fin si jeu -->
 		<div class="sync"  data-action="toggle" data-param="(etat=='correction')"   style="display:none">
@@ -183,14 +183,9 @@
    		<tbody class="table table-condensed sync" data-action="html" data-param="bonus.html">
    		</tbody>
    	</table>
-   	
-   	<div class="sync" data-action="toggle" data-param="(etat=='resultats')&&(stats.loc.note<20)"  style="display:none">
-    <p><button class="btn btn-primary btn-block btn-lg"  onclick="modifier()">
-    <i class="fa fa-arrow-left"></i> Modifier les réponses </button></p>
-  </div><!-- /boutonModifier -->
 
-    <p class="sync" data-action="toggle" data-param="(etat=='resultats')"><button class="btn btn-primary btn-block btn-lg"  onclick="correction()">
-    <i class="fa fa-arrow-right"></i> Correction et suite </button></p>
+    <p class="sync" data-action="toggle" data-param="(etat=='resultats')"><button class="btn-block btn-lg btn-large waves-effect waves-light"  onclick="redemarrerTheme()">
+    <i class="fa fa-arrow-right"></i> Recommencer </button></p>
 	<!-- /boutonCorrection -->
 
 	</div> <!-- - - - / R E S U L T A T S  - - - - - -->	
